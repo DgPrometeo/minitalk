@@ -6,16 +6,49 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:27 by danielga          #+#    #+#             */
-/*   Updated: 2023/07/05 13:34:39 by danielga         ###   ########.fr       */
+/*   Updated: 2023/07/15 22:36:33 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
 
-void	ft_signaller(int signal)
+static void	ft_signaller(int signal)
 {
-	
+	char	str[];
+	int		n;
+	int		bit;
+
+	str = "00000000";
+	n = 0;
+	if (signal == SIGUSR1)
+		bit = 0;
+	else if (signal == SIGUSR2)
+		bit = 1;
+	else
+		exit(EXIT_FAILURE);
+	ft_printf("%s\n", str);
+	str += bit << n++;
+	ft_printf("%s\n", str);
+	ft_printf("%s\n", n);
+	if (n == 7)
+	{
+		ft_printf("%c", str);
+		if (str == '\0')
+			ft_printf("\n");
+		n = 0;
+		str = 0;
+	}
 }
+
+/*
+Esta función recibirá las señales y las reproducirá. 
+tenemos el string que reproducirá caracter a caracter.
+el int bit que se establecerá si es 1 o 0.
+y el int n para las posiciones del 0 al 7 de un bits.
+
+Cuando tenga todos los bit del carácter lo imprimirá,
+y cuando el string sea nulo, terminará con un salto de línea.
+*/
 
 int	main(void)
 {
@@ -23,10 +56,10 @@ int	main(void)
 
 	pid = getpid();
 	ft_printf("SERVER PID: %d\n", pid);
+	signal(SIGUSR1, ft_signaller);
+	signal(SIGUSR2, ft_signaller);
 	while (1)
 	{
-		signal(SIGUSR1, ft_signaller);
-		signal(SIGUSR2, ft_signaller);
 		pause();
 	}
 	return (0);
@@ -48,17 +81,19 @@ return.
 */
 /*
 Funciones permitidas:
+-Write
 -Ft_printf 
 -Signal: Permite manejar seales de interrupcion.
 -Sigemptyset: para inicializar un conjunto de senales vacio.
 -Sigaddset: Agrega una se;al a un conjunto de se;ales.
 -Sigaction: sirve para 
--Kill: 
+-Kill: para enviar las señales al server.
 -Getpid: Para obtener el ID del proceso.
 -Malloc 
 -Free
 -Pause: para suspender la ejecucion de un programa
--Sleep: 
--Usleep: 
--Exit: 
+-Sleep: suspende la ejecución de un programa en una serie de segundos concretos.
+-Usleep: suspende la ejecución de un programa en una serie de microsegundos.
+-Exit: finalizará la ejecución del programa completamente para volver el sistema
+operativo.
 */

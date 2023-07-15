@@ -6,37 +6,38 @@
 #    By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/29 16:31:25 by danielga          #+#    #+#              #
-#    Updated: 2023/07/05 12:19:32 by danielga         ###   ########.fr        #
+#    Updated: 2023/07/15 19:59:09 by danielga         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= server
-NAME2	= client
+SERVER	= server
+CLIENT	= client
 
-HEADER	= minitalk.h
+NAME	= minitalk.a
 
-SERVER	= server.c
-CLIENT	= client.c
+SERVER_SRC	= server.c
+CLIENT_SRC	= client.c
 
-OBJS_SERVER	= ${SERVER:.c=.o}
-OBJS_CLIENT	= ${CLIENT:.c=.o}
+OBJS_SERVER	= ${SERVER_SRC:.c=.o}
+OBJS_CLIENT	= ${CLIENT_SRC:.c=.o}
 
-LIBFT	= ./libft
+SRC_LIBFT	= ./libft
+LIBFT = ./libft/libft.a
 
 CC	= gcc
 CFLAGS	= -Wall -Wextra -Werror
 RM	= rm -f
 
-all: $(LIBFT) $(LIBPRINTF) $(NAME) $(NAME2)
+all: $(LIBFT) $(CLIENT) $(SERVER)
 
 $(LIBFT):
-	make -C ./libft
+	@make -C $(SRC_LIBFT)
 
-$(NAME): $(OBJS_SERVER)
-	$(CC) $(CFLAGS) $(OBJS_SERVER) -o $(NAME)
+$(SERVER): $(OBJS_SERVER)
+	$(CC) -g $(CFLAGS) $(LIBFT) $(OBJS_SERVER) -o $(SERVER)
 
-$(NAME2): $(OBJS_CLIENT)
-	$(CC) $(CFLAGS) $(OBJS_CLIENT) -o $(NAME2)
+$(CLIENT): $(OBJS_CLIENT)
+	$(CC) $(CFLAGS) $(LIBFT) $(OBJS_CLIENT) -o $(CLIENT)
 
 clean: 
 	$(RM) $(OBJS_SERVER)
@@ -44,8 +45,8 @@ clean:
 	make clean -C ./libft
 	
 fclean: clean
-	$(RM) $(NAME)
-	$(RM) $(NAME2)
+	$(RM) $(SERVER)
+	$(RM) $(CLIENT)
 	make fclean -C ./libft
 
 re: fclean all

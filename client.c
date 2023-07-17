@@ -6,19 +6,67 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:04 by danielga          #+#    #+#             */
-/*   Updated: 2023/07/15 19:22:07 by danielga         ###   ########.fr       */
+/*   Updated: 2023/07/17 13:55:56 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
 
-static void	ft_binary(int pid, char *str, int len)
+static void	ft_send_bit(int pid, char *str)
+{
+	int		bit;
+	char	character;
+
+	while (*str)
+	{
+		bit = 8;
+		character = *str;
+		while (bit--)
+		{
+			if (character >> bit & 1)
+				kill (pid, SIGUSR2);
+			else
+				kill(pid, SIGUSR1);
+			usleep(1000);
+		}
+		str++;
+	}
+}
+/*
+Hará un bicle mientras haya str. en el indicará que un bit son 8
+entonces el elemento que hemos creado de caracter es igual a donde se encuentra
+el puntero str. ese caracter lo vamos a descomponer en los 8 bits enviando
+con el kill cuando sea 0 con el SIGUSR1 y si verifica que es al recorrer 
+el bit es un 1 con AND "&" enviara la SIGUSR2. descansa 1000 microsegundos
+y vuelve reduciendo un bit. 
+*/
+
+/*static void	ft_send_bit(int pid, char *str)
+{
+	int		bit;
+	char	character;
+
+	while (*str)
+	{
+		bit = 8;
+		character = *str++;
+		while (bit--)
+		{
+			if (character >> bit & 1)
+				kill (pid, SIGUSR2);
+			else
+				kill(pid, SIGUSR1);
+			usleep(1000);
+		}
+	}
+}*/
+
+/*static void	ft_binary(int pid, char *str, int len)
 {
 	int	i;
 	int	position;
 
-	i = 0;
-	while (i <= len)
+	while (*str)
 	{
 		position = 0;
 		while (position <= 7)
@@ -32,7 +80,7 @@ static void	ft_binary(int pid, char *str, int len)
 		}
 		i++;
 	}
-}
+}*/
 /*
 Aquí entra el pid, el string que realmente es el binario y la dimensión.
 En lo escrito hay dos opciones (o 0 o 1) vamos a usar los dos canales 
@@ -56,7 +104,8 @@ int	main(int argc, char **argv)
 	{
 		pid = ft_atoi(argv[1]);
 		str = argv[2];
-		ft_binary(pid, argv[2], ft_strlen(str));
+	//	ft_binary(pid, argv[2], ft_strlen(str));
+		ft_send_bit(pid, str);
 	}
 	return (0);
 }

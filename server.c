@@ -6,19 +6,53 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:27 by danielga          #+#    #+#             */
-/*   Updated: 2023/07/15 22:36:33 by danielga         ###   ########.fr       */
+/*   Updated: 2023/07/17 13:45:37 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
 
-static void	ft_signaller(int signal)
+void	ft_signaller(int signal)
 {
-	char	str[];
+	static char	str;
+	static int	bit;
+
+	if (signal == SIGUSR2)
+	{
+		str = str | (1 << (7 - bit));
+	//	ft_printf("%d", (bit));
+	}
+	bit++;
+	if (bit == 8)
+	{
+		ft_printf("%c", (str));
+		bit = 0;
+		str = 0;
+	}
+	//if (str == '\0')
+	//	ft_printf("\n");
+}
+/* 
+Tenemos dos variables staticas. una para configurar el caracter, y otra
+para calcular que tenga 8 bits. 
+Realmente, si es 0 no nos importa ya que es un caracter vacío por lo que todo
+es 0. Lo que si hay que indicar es cuando uno de los bits es 1. Para ello
+cuando se localice una señal de "1", le decimos que el caracter es igual a 
+si mismo pero se hace la operacion OR "|" para así cuando localice una
+diferencia de 0 coloque 1 en esa posición. desplazando los bit la cantidad
+de bits calculadas de las veces que ha entrado la señal incluida las 
+que no han sido 1.
+Una vez que tengo en bit 8, le indico que la imprima. y así imprime 
+el caracter.
+*/
+
+/* static void	ft_signaller(int signal)
+{
+	char	*str;
 	int		n;
 	int		bit;
 
-	str = "00000000";
+	str[8] = ["00000000"];
 	n = 0;
 	if (signal == SIGUSR1)
 		bit = 0;
@@ -39,7 +73,7 @@ static void	ft_signaller(int signal)
 		str = 0;
 	}
 }
-
+*/
 /*
 Esta función recibirá las señales y las reproducirá. 
 tenemos el string que reproducirá caracter a caracter.
@@ -56,10 +90,10 @@ int	main(void)
 
 	pid = getpid();
 	ft_printf("SERVER PID: %d\n", pid);
-	signal(SIGUSR1, ft_signaller);
-	signal(SIGUSR2, ft_signaller);
 	while (1)
 	{
+		signal(SIGUSR1, ft_signaller);
+		signal(SIGUSR2, ft_signaller);
 		pause();
 	}
 	return (0);

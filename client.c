@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:04 by danielga          #+#    #+#             */
-/*   Updated: 2023/07/17 13:55:56 by danielga         ###   ########.fr       */
+/*   Updated: 2023/07/19 12:49:09 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	ft_send_bit(int pid, char *str)
 				kill (pid, SIGUSR2);
 			else
 				kill(pid, SIGUSR1);
-			usleep(1000);
+			usleep(100);
 		}
 		str++;
 	}
@@ -99,7 +99,10 @@ int	main(int argc, char **argv)
 	char	*str;
 
 	if (argc != 3)
+	{
+		ft_printf("Wrong number of arguments. Need ./client <PID> <Message>\n");
 		exit(EXIT_FAILURE);
+	}
 	else
 	{
 		pid = ft_atoi(argv[1]);
@@ -107,6 +110,7 @@ int	main(int argc, char **argv)
 	//	ft_binary(pid, argv[2], ft_strlen(str));
 		ft_send_bit(pid, str);
 	}
+	ft_send_bit(pid, "\n");
 	return (0);
 }
 

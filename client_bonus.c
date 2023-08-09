@@ -6,22 +6,24 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:04 by danielga          #+#    #+#             */
-/*   Updated: 2023/08/02 20:07:16 by danielga         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:30:19 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
+#include <signal.h>
 
 /**
- * @brief Entrará en esta función una vez escriba el mensaje enviado.
- * Únicamente escribirá que el mensaje ha sido correcto.
+ * @brief Entrará en esta función una vez que reciba una señal del servidor.
+ * Únicamente escribirá "." por cada bit, y "mensaje recibido" por cada caracter 
+ * escrito.
 **/
-static void	ft_success(int signal)
+static void	ft_signal_back(int signal)
 {
-	if (signal == 1)
-	{
-		ft_printf("Message Succesfully\n");
-	}
+	if (signal == SIGUSR2)
+		ft_printf(".");
+	if (signal == SIGUSR1)
+		ft_printf("Caracter recived\n");
 }
 
 /**
@@ -78,9 +80,10 @@ int	main(int argc, char **argv)
 	{
 		pid = ft_atoi(argv[1]);
 		str = argv[2];
+		signal(SIGUSR1, ft_signal_back);
+		signal(SIGUSR2, ft_signal_back);
 		ft_send_bit(pid, str);
 	}
 	ft_send_bit(pid, "\n");
-	ft_success(1);
 	return (0);
 }

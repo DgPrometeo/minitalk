@@ -6,11 +6,12 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:27 by danielga          #+#    #+#             */
-/*   Updated: 2023/08/02 20:07:29 by danielga         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:25:36 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./libft/libft.h"
+#include <signal.h>
 
 /**
  * @brief Esta función recibe la señal y la va a recomponer. con un caracter nulo
@@ -20,20 +21,23 @@
  * 
  * @param signal Señal recibida.
 **/
-static void	ft_signaller(int signal)
+static void	ft_signaller(int signal, siginfo_t *info, void *context)
 {
-	static char	str;
+	static char	caracter;
 	static int	bit;
 
+	(void) context;
 	if (signal == SIGUSR2)
-		str = str | (1 << (7 - bit));
+		caracter = caracter | (1 << (7 - bit));
 	bit++;
 	if (bit == 8)
 	{
-		ft_printf("%c", (str));
+		ft_printf("%c", (caracter));
 		bit = 0;
-		str = 0;
+		caracter = 0;
+		kill(info->si_pid, SIGUSR1);
 	}
+	kill(info->si_pid, SIGUSR2);
 }
 
 /**
@@ -46,14 +50,18 @@ static void	ft_signaller(int signal)
 **/
 int	main(void)
 {
-	int	pid;
+	int					pid;
+	struct sigaction	info;
 
 	pid = getpid();
-	ft_printf("SERVER PID: %d\n", pid);
+	ft_printf("PID SERVER: %d\n", pid);
+	info.sa_sigaction = ft_signaller;
+	sigemptyset(&info.sa_mask);
+	info.sa_flags = SA_SIGINFO;
 	while (1)
 	{
-		signal(SIGUSR1, ft_signaller);
-		signal(SIGUSR2, ft_signaller);
+		sigaction(SIGUSR1, &info, NULL);
+		sigaction(SIGUSR2, &info, NULL);
 		pause();
 	}
 	return (0);

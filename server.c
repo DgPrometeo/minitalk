@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:27 by danielga          #+#    #+#             */
-/*   Updated: 2023/07/25 21:22:54 by danielga         ###   ########.fr       */
+/*   Updated: 2023/08/09 15:46:44 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@
 **/
 void	ft_signaller(int signal)
 {
-	static char	str;
+	static char	character;
 	static int	bit;
 
 	if (signal == SIGUSR2)
-		str = str | (1 << (7 - bit));
+		character = character | (1 << (7 - bit));
 	bit++;
 	if (bit == 8)
 	{
-		ft_printf("%c", (str));
+		ft_printf("%c", (character));
 		bit = 0;
-		str = 0;
+		character = 0;
 	}
 }
 

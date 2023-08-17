@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:27 by danielga          #+#    #+#             */
-/*   Updated: 2023/08/07 16:25:36 by danielga         ###   ########.fr       */
+/*   Updated: 2023/08/09 18:53:40 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
  * de un caracter, lo imprimirá y reseteará el caracter y el número de bits.
  * 
  * @param signal Señal recibida.
+ * @param info Toda la información de la señal.
+ * @param context En este caso no lo utilizamos (void).
+ * 
 **/
 static void	ft_signaller(int signal, siginfo_t *info, void *context)
 {
@@ -37,7 +40,6 @@ static void	ft_signaller(int signal, siginfo_t *info, void *context)
 		caracter = 0;
 		kill(info->si_pid, SIGUSR1);
 	}
-	kill(info->si_pid, SIGUSR2);
 }
 
 /**

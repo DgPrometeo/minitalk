@@ -6,7 +6,7 @@
 /*   By: danielga <danielga@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 20:14:04 by danielga          #+#    #+#             */
-/*   Updated: 2023/08/07 16:30:19 by danielga         ###   ########.fr       */
+/*   Updated: 2023/08/09 18:14:22 by danielga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 static void	ft_signal_back(int signal)
 {
 	if (signal == SIGUSR2)
-		ft_printf(".");
+		ft_printf("");
 	if (signal == SIGUSR1)
-		ft_printf("Caracter recived\n");
+		ft_printf("");
 }
 
 /**
@@ -51,7 +51,7 @@ static void	ft_send_bit(int pid, char *str)
 				kill (pid, SIGUSR2);
 			else
 				kill(pid, SIGUSR1);
-			usleep(100);
+			usleep(150);
 		}
 		str++;
 	}
@@ -60,7 +60,8 @@ static void	ft_send_bit(int pid, char *str)
 /**
  * @brief Escribirá un mensaje con el PID del servidor para que lo reciba y lo 
  * trascriba. Es necesario que sean tres argumentos para que funcione y el PID 
- * lo pasaremos a enteros.
+ * lo pasaremos a enteros. En este caso, activaremos signal para recibir 
+ * confirmación. 
  * 
  * @param argc Número de argumentos. En este caso son necesarios 3.
  * @param argv Los argumentos recibidos.
@@ -68,8 +69,8 @@ static void	ft_send_bit(int pid, char *str)
 **/
 int	main(int argc, char **argv)
 {
-	int		pid;
-	char	*str;
+	int			pid;
+	char		*str;
 
 	if (argc != 3)
 	{
